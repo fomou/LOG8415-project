@@ -7,7 +7,7 @@ def get_connector():
     connection = connect(
         host='localhost',        # MySQL server address (localhost or IP)
         user='root',             # MySQL username
-
+        password='root',# MySQL password
         database='sakila' # Database name
     )
     return connection
@@ -20,7 +20,7 @@ def ping():
 def read_data():
     connection = get_connector()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT count(*) FROM city;")
+    cursor.execute("SELECT * FROM city;")
     row = cursor.fetchall()
     cursor.close()
     connection.close()

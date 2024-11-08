@@ -36,7 +36,7 @@ class Infrastructure:
             GroupName="Internal",
             Description='Security group for internal only',
             VpcId=self.VPC_id)
-        self.sec_group_id_2 = response_security_group_2
+        self.sec_group_id_2 = response_security_group_2["GroupId"]
         self.sec_group_id_1 = response_security_group['GroupId']
 
         client.authorize_security_group_ingress(
@@ -116,6 +116,6 @@ if __name__ == '__main__':
     names = ['Manager', 'worker1','worker2']
 
     for name in names :
-        infra.create_micro_instances(ec2_res, infra.sec_group_id_2,user_data, name)
+        infra.create_micro_instances(ec2_res, infra.sec_group_id_1,user_data, name)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
