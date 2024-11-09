@@ -23,11 +23,12 @@ def names_private_ip():
 
 @app.route("/read")
 def read():
-    process_req("read")
-
+    response = process_req("read")
+    return jsonify(response)
 @app.route("/write")
 def write():
-    process_req("write")
+    response = process_req("write")
+    return jsonify(response)
 def process_req(route):
     # Reject request from others hosts other than the gatekeeper
     incoming_ip = request.remote_addr

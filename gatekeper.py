@@ -28,7 +28,7 @@ def read():
 def write():
     req_type = request.args.get("req_type")
     private = trusted_host_ip()
-    response = requests.get(f'http://{private}:443/write?req_type={req_type}')
+    response = requests.get(f'http://{private}:443/write')
     return jsonify(response.json()), response.status_code
 
 

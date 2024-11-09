@@ -80,7 +80,7 @@ class Infrastructure:
                                                    TagSpecifications=[{'ResourceType': 'instance',
                                                                        'Tags': [{'Key': 'Name',
                                                            'Value': name}]}],
-                                                   SecurityGroupIds=[secGroupId],
+                                                   SecurityGroupIds=secGroupId,
                                                    UserData=user_data)
             print(f"Creating {name}")
             return response[0]
@@ -129,7 +129,7 @@ if __name__ == '__main__':
 
     infra.create_large_instances(ec2_res, [infra.sec_group_id_2], trusted_host_ud, "Trusted_Hosts")
 
-    infra.create_large_instances(ec2_res, [infra.sec_group_id_2], trusted_host_ud, "Gatekeeper")
+    infra.create_large_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], trusted_host_ud, "Gatekeeper")
 
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
