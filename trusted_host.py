@@ -4,7 +4,7 @@ import requests
 import random
 app = Flask("__main__")
 def names_private_ip():
-    client = boto3.client('ec2')
+    client = boto3.client('ec2', region_name='us-east-1')
     filters = [{'Name': 'tag:Name','Values': ['Proxy',"Gatekeeper"]}]
     response = client.describe_instances(Filters = filters)
     # Describe instances that match the filters

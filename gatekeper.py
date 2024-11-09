@@ -4,7 +4,7 @@ import requests
 import random
 app = Flask("__main__")
 def trusted_host_ip():
-    client = boto3.client('ec2')
+    client = boto3.client('ec2', region_name='us-east-1')
     filters = [{'Name': 'tag:Name','Values': ['Trusted_Hosts']}]
     response = client.describe_instances(Filters = filters)
     # Describe instances that match the filters
@@ -16,7 +16,9 @@ def trusted_host_ip():
             for instance in reservation['Instances']:
                 if instance['State']['Name'] == 'running':
                     return instance['PublicIpAddress']
-
+@app.route("/ping")
+def ping():
+    return jsonify({"status": "healthy"}),200
 @app.route("/read")
 def read():
     req_type = request.args.get("req_type")

@@ -120,16 +120,16 @@ if __name__ == '__main__':
     command = "#!/bin/bash\nmkdir -p /home/ubuntu/.aws/\n"+"echo -e"+" \""+credentials+"\" > /home/ubuntu/.aws/credentials\n"
     command+= "echo -e"+" \""+key_pair+"\" > Project-key-pair.pem\n"
     command+="chmod 400 Project-key-pair.pem\n"
-    user_data_base = open('user_data_proxy.sh').read()
+    user_data_base = command+ open('user_data_proxy.sh').read()
     proxy_user_data = user_data_base + "\npython3 proxy.py\n"
-    trusted_host_ud = user_data_base+"\npython3 proxy.py\n"
+    trusted_host_ud = user_data_base+"\npython3 trusted_host.py\n"
     gatekeeper_user_data = user_data_base + "\npython3 gatekeeper.py\n"
 
     infra.create_large_instances(ec2_res,[infra.sec_group_id_2], proxy_user_data,"Proxy")
 
     infra.create_large_instances(ec2_res, [infra.sec_group_id_2], trusted_host_ud, "Trusted_Hosts")
 
-    infra.create_large_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], trusted_host_ud, "Gatekeeper")
+    infra.create_large_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], gatekeeper_user_data, "Gatekeeper")
 
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
