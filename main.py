@@ -82,7 +82,7 @@ class Infrastructure:
                                                            'Value': name}]}],
                                                    SecurityGroupIds=[secGroupId],
                                                    UserData=user_data)
-            print("Creating Load balancer")
+            print(f"Creating {name}")
             return response[0]
         except ClientError as e:
             print(f"Error: {e}")
@@ -97,7 +97,7 @@ class Infrastructure:
                                                            'Value': name}]}],
                                                    SecurityGroupIds=[secGroupId],
                                                    UserData=user_data)
-            print("Creating Load balancer")
+            print(f"Creating {name}")
             return response[0]
         except ClientError as e:
             print(f"Error: {e}")
@@ -110,12 +110,14 @@ if __name__ == '__main__':
     infra.verify_valid_credentials()
     infra.create_security_group(client,"sec-group-project")
     infra.create_login_key_pair(ec2_res)
-
     # Creating 3 micro the MySql cluster
-
     names = ['Manager', 'worker1','worker2']
-
     for name in names :
-        infra.create_micro_instances(ec2_res, infra.sec_group_id_1,user_data, name)
+        infra.create_micro_instances(ec2_res, infra.sec_group_id_2,user_data, name)
+
+
+    proxy_user_data = open('user_data_proxy.sh').read()
+
+    infra.create_large_instances(ec2_res,infra.sec_group_id_1, user_data,"Proxy")
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

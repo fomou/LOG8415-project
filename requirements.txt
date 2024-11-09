@@ -1,4 +1,6 @@
-mysql-connector-python
-flask
-boto3
-botocore
+mysql-connector-python~=9.1.0
+flask~=3.0.3
+boto3~=1.35.54
+botocore~=1.35.54
+
+requests~=2.32.3
