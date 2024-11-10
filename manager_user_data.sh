@@ -29,4 +29,4 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-python3 worker.py
+python3 manager.py

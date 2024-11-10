@@ -23,11 +23,11 @@ def names_private_ip():
 
 @app.route("/read")
 def read():
-    response = process_req("read")
+    response,_ = process_req("read")
     return jsonify(response)
 @app.route("/write")
 def write():
-    response = process_req("write")
+    response,_ = process_req("write")
     return jsonify(response)
 def process_req(route):
     # Reject request from others hosts other than the gatekeeper
@@ -46,4 +46,4 @@ def process_req(route):
 
 if __name__ == "__main__":
     ip_table = names_private_ip()
-    app.run(host='0.0.0.0', port=443)
+    app.run(host='0.0.0.0', port=5050)

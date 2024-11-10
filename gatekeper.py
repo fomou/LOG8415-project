@@ -23,14 +23,14 @@ def ping():
 def read():
     req_type = request.args.get("req_type")
     private = trusted_host_ip()
-    response = requests.get(f'http://{private}:443/read??req_type={req_type}')
+    response = requests.get(f'http://{private}:5000/read?req_type={req_type}')
     return jsonify(response.json()), response.status_code
 
 @app.route("/write")
 def write():
     req_type = request.args.get("req_type")
     private = trusted_host_ip()
-    response = requests.get(f'http://{private}:443/write')
+    response = requests.get(f'http://{private}:5050/write')
     return jsonify(response.json()), response.status_code
 
 

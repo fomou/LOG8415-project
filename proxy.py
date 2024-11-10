@@ -36,11 +36,12 @@ def read():
         req_type = request.args.get("req_type")
         outcome =process_request("read",req_type)
         return outcome
+
 @app.route("/write")
 def write():
-    req_type = request.args.get("req_type")
-    outcome = process_request("write", req_type)
-    return outcome
+    ip = name_ip["Manager"]
+    response = requests.get(f'http://{ip}:5000/write')
+    return jsonify(response)
 @app.route("/table_size")
 def get_table_size():
     data = {}
