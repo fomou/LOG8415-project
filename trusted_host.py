@@ -21,6 +21,10 @@ def names_private_ip():
 
     return names_ip
 
+@app.route("/ping")
+def ping():
+    return jsonify({"status":"healthy"})
+
 @app.route("/read")
 def read():
     response,_ = process_req("read")
