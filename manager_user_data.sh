@@ -9,9 +9,15 @@ wget https://downloads.mysql.com/docs/sakila-db.tar.gz -O /home/ubuntu/sakila-db
 tar -xvf /home/ubuntu/sakila-db.tar.gz -C /home/ubuntu/
 
 # Upload Sakila database to MySQL
-mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
-mysql -u root -e "SOURCE /home/ubuntu/sakila-db/sakila-schema.sql;"
-mysql -u root -e "SOURCE /home/ubuntu/sakila-db/sakila-data.sql;"
+sudo service mysql start
+
+echo -e "\nn\nn\nn\nY\nn\n" | sudo mysql_secure_installation
+
+sudo mysql -u root -e "SOURCE /home/ubuntu/sakila-db/sakila-schema.sql;"
+sudo mysql -u root -e "SOURCE /home/ubuntu/sakila-db/sakila-data.sql;"
+sudo mysql -u root -e "USE sakila; CREATE USER 'root'@'localhost' IDENTIFIED BY 'root'; GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'root'; FLUSH PRIVILEGES;" > /home/ubuntu/db_setup.log 2>&1,
+sudo mysql -u root -e "USE sakila; CREATE USER 'root'@'%' IDENTIFIED BY 'root'; GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'root'; FLUSH PRIVILEGES;" > /home/ubuntu/db_setup.log 2>&1,
+
 
 
 # Benchmark using Sysbench

@@ -31,11 +31,12 @@ def names_private_ip():
 @app.route("/ping")
 def ping():
     return jsonify({"status": "healthy"}),200
+
 @app.route("/read")
 def read():
         req_type = request.args.get("req_type")
         outcome =process_request("read",req_type)
-        return outcome
+        return jsonify(outcome)
 
 @app.route("/write")
 def write():
