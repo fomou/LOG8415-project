@@ -42,7 +42,7 @@ def write():
     cursor.close()
     connection.commit()
     connection.close()
-    for ip in ["172.198.100.4","172.198.100.5"]:
+    for ip in ["172.31.16.4","172.31.16.5"]:
         response = requests.get(f'http://{ip}:5000/write?name={name}')
         print(response)
     return jsonify({'write':"finish"}), 200
@@ -58,5 +58,5 @@ def get_table_size():
     return jsonify(row[0]), 200
 
 if __name__ == "__main__":
-    name_ip = {'work1':"172.198.100.4", "worker2":'172.198.100.5'}
+    name_ip = {'work1':"172.31.16.4", "worker2":'172.31.16.5'}
     app.run(host='0.0.0.0', port=5000) # Adjust port if needed

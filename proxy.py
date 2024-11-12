@@ -59,5 +59,5 @@ def process_request(route,req_type):
             return jsonify({"Type": req_type, "Processed by": best_name, "value": response.json()})
 
 if __name__ == "__main__":
-    name_ip = {'Manager': '172.198.100.3','work1':"172.198.100.4", "worker2":'172.198.100.5'}
+    name_ip = {'Manager': '172.31.16.3','work1':"172.31.16.4", "worker2":'172.31.16.5'}
     app.run(host='0.0.0.0', port=5000)

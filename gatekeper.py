@@ -11,14 +11,14 @@ def ping():
 @app.route("/read")
 def read():
     req_type = request.args.get("req_type")
-    private = '172.198.100.1'
+    private = '172.31.16.1'
     response = requests.get(f'http://{private}:5050/read?req_type={req_type}')
     return jsonify(response.json()), response.status_code
 
 @app.route("/write")
 def write():
     req_type = request.args.get("req_type")
-    private  = '172.198.100.1'
+    private  = '172.31.16.1'
     response = requests.get(f'http://{private}:5050/write')
     return jsonify(response.json()), response.status_code
 

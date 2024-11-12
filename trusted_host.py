@@ -30,5 +30,5 @@ def process_req(route):
 
 
 if __name__ == "__main__":
-    ip_table = {'Proxy':'172.198.100.2' ,"Gatekeeper":'172.198.100.6'}
+    ip_table = {'Proxy':'172.31.16.2' ,"Gatekeeper":'172.31.16.6'}
     app.run(host='0.0.0.0', port=5050)
