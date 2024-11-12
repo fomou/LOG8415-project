@@ -42,7 +42,7 @@ def read():
 def write():
     ip = name_ip["Manager"]
     response = requests.get(f'http://{ip}:5000/write')
-    return jsonify(response)
+    return jsonify(response.json())
 @app.route("/table_size")
 def get_table_size():
     data = {}
