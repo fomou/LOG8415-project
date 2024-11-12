@@ -6,35 +6,12 @@ import random
 
 app = Flask(__name__)
 
-def names_private_ip():
-    client = boto3.client('ec2', region_name='us-east-1')
-    filters = [
-        {
-            'Name': 'tag:Name',  # Filtering by the 'Environment' tag
-            'Values': ["worker1", "worker2"]
-        }
-    ]
-    response = client.describe_instances(Filters = filters)
-    # Describe instances that match the filters
-    names_ip ={}
-    # Access the instance details
-    if not response['Reservations']:
-        print('No instances with the specified tag were found.')
-    else:
-        for reservation in response['Reservations']:
-            for instance in reservation['Instances']:
-                if instance['State']['Name'] == 'running':
-                    name = instance['Tags'][0]['Value']
-                    names_ip[name] = instance['PrivateIpAddress']
-
-    return names_ip
-
 def get_connector():
 
     connection = connect(
         host='localhost',        # MySQL server address (localhost or IP)
         user='root',             # MySQL username
-        password='root',# MySQL password
+        # MySQL password
         database='sakila' # Database name
     )
     return connection
@@ -59,14 +36,13 @@ def write():
     cursor = connection.cursor(dictionary=True)
     name = f'name_{random.randint(0, 1000)}'
     cursor.execute("CREATE TABLE IF NOT EXISTS test (id INT AUTO_INCREMENT,name VARCHAR(255),PRIMARY KEY (id));")
-    cursor.execute(f"INSERT INTO test (name) VALUES ({name});")
+    cursor.execute(f"INSERT INTO test (name) VALUES ('{name}');")
 
     row = cursor.fetchall()
     cursor.close()
     connection.commit()
     connection.close()
-    for name in ["worker1","worker2"]:
-        ip = name_ip[name]
+    for ip in ["172.198.100.4","172.198.100.5"]:
         response = requests.get(f'http://{ip}:5000/write?name={name}')
         print(response)
     return jsonify({'write':"finish"}), 200
@@ -82,5 +58,5 @@ def get_table_size():
     return jsonify(row[0]), 200
 
 if __name__ == "__main__":
-    name_ip = names_private_ip()
+    name_ip = {'work1':"172.198.100.4", "worker2":'172.198.100.5'}
     app.run(host='0.0.0.0', port=5000) # Adjust port if needed

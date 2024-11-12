@@ -7,7 +7,7 @@ def get_connector():
     connection = connect(
         host='localhost',        # MySQL server address (localhost or IP)
         user='root',             # MySQL username
-        password='root',# MySQL password
+       # MySQL password
         database='sakila' # Database name
     )
     return connection
@@ -32,7 +32,7 @@ def write():
     cursor = connection.cursor(dictionary=True)
     name = request.args.get("name")
     cursor.execute("CREATE TABLE IF NOT EXISTS test (id INT AUTO_INCREMENT,name VARCHAR(255),PRIMARY KEY (id));")
-    cursor.execute(f"INSERT INTO test (name) VALUES ({name});")
+    cursor.execute(f"INSERT INTO test (name) VALUES ('{name}');")
     row = cursor.fetchall()
     cursor.close()
     connection.commit()

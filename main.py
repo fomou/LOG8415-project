@@ -73,7 +73,7 @@ class Infrastructure:
             file.write(key_pair.key_material)
         os.chmod(f'{self.key_pair_name}.pem', 0o444)
 
-    def create_micro_instances(self,ec2_client,secGroupId, user_data, name):
+    def create_micro_instances(self,ec2_client,secGroupId, user_data, name,private_ip):
         try:
             response = ec2_client.create_instances(ImageId='ami-0e86e20dae9224db8',
                                                    MaxCount=1, InstanceType='t2.micro',
@@ -81,6 +81,7 @@ class Infrastructure:
                                                    TagSpecifications=[{'ResourceType': 'instance',
                                                                        'Tags': [{'Key': 'Name',
                                                            'Value': name}]}],
+                                                   PrivateIpAddress = private_ip,
                                                    SecurityGroupIds=secGroupId,
                                                    UserData=user_data)
             print(f"Creating {name}")
@@ -88,7 +89,7 @@ class Infrastructure:
         except ClientError as e:
             print(f"Error: {e}")
 
-    def create_large_instances(self,ec2_client,secGroupId, user_data, name):
+    def create_large_instances(self,ec2_client,secGroupId, user_data, name, private_ip):
         try:
             response = ec2_client.create_instances(ImageId='ami-0e86e20dae9224db8',
                                                    MaxCount=1, InstanceType='t2.large',
@@ -96,6 +97,7 @@ class Infrastructure:
                                                    TagSpecifications=[{'ResourceType': 'instance',
                                                                        'Tags': [{'Key': 'Name',
                                                            'Value': name}]}],
+                                                   PrivateIpAddress=private_ip,
                                                    SecurityGroupIds=secGroupId,
                                                    UserData=user_data)
             print(f"Creating {name}")
@@ -113,28 +115,31 @@ if __name__ == '__main__':
     infra.create_login_key_pair(ec2_res)
     # Creating 3 micro the MySql cluster
     names = ['worker1','worker2']
-    for name in names :
-        infra.create_micro_instances(ec2_res, [infra.sec_group_id_2],USER_DATA_WORKERS, name)
+    private_address = ['172.198.100.4','172.198.100.5']
+    for i,name in enumerate(names) :
+        infra.create_micro_instances(ec2_res, [infra.sec_group_id_2],user_data, name, private_address)
 
-#     credentials = open('credentials','r').read()
-#     key_pair = open('Project-key-pair.pem','r').read()
-#     command = "#!/bin/bash\nmkdir -p /home/ubuntu/.aws/\n"+"echo -e"+" \""+credentials+"\" > /home/ubuntu/.aws/credentials\n"
-#     command+= "echo -e"+" \""+key_pair+"\" > Project-key-pair.pem\n"
-#     command+="chmod 400 Project-key-pair.pem\n"
-#     user_data_base = command + open('user_data_proxy.sh').read()
-#     proxy_user_data = user_data_base + "\npython3 proxy.py\n"
-#     trusted_host_ud = user_data_base+"\npython3 trusted_host.py\n"
-#     gatekeeper_user_data = user_data_base + "\npython3 gatekeper.py\n"
-#     manager_user_data = "#!/bin/bash\nmkdir -p /home/ubuntu/.aws/\n"+"echo -e"+" \""+credentials+"\" > /home/ubuntu/.aws/credentials\n"
-#     manager_user_data+="echo -e"+" \""+key_pair+"\" > Project-key-pair.pem\n"
-#     manager_user_data+=open("manager_user_data.sh").read()
-#
-#     infra.create_large_instances(ec2_res,[infra.sec_group_id_1,infra.sec_group_id_2], proxy_user_data,"Proxy")
-#
-#     infra.create_large_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], trusted_host_ud, "Trusted_Hosts")
-#
-#     infra.create_large_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], gatekeeper_user_data, "Gatekeeper")
-#
-#     infra.create_micro_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], manager_user_data, "Manager")
-#
-# # See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    credentials = open('credentials','r').read()
+    key_pair = open('Project-key-pair.pem','r').read()
+    command = "#!/bin/bash\nmkdir -p /home/ubuntu/.aws/\n"+"echo -e"+" \""+credentials+"\" > /home/ubuntu/.aws/credentials\n"
+    command+= "echo -e"+" \""+key_pair+"\" > Project-key-pair.pem\n"
+    command+="chmod 400 Project-key-pair.pem\n"
+    user_data_base = command + open('user_data_proxy.sh').read()
+    proxy_user_data = user_data_base + "\npython3 proxy.py\n"
+    trusted_host_ud = user_data_base+"\npython3 trusted_host.py\n"
+    gatekeeper_user_data = user_data_base + "\npython3 gatekeper.py\n"
+    manager_user_data = "#!/bin/bash\nmkdir -p /home/ubuntu/.aws/\n"+"echo -e"+" \""+credentials+"\" > /home/ubuntu/.aws/credentials\n"
+    manager_user_data+="echo -e"+" \""+key_pair+"\" > Project-key-pair.pem\n"
+    manager_user_data+=open("manager_user_data.sh").read()
+
+    infra.create_micro_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], manager_user_data, "Manager", '172.198.100.3')
+
+    infra.create_large_instances(ec2_res,[infra.sec_group_id_1,infra.sec_group_id_2], proxy_user_data,"Proxy",'172.198.100.2')
+
+    infra.create_large_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], trusted_host_ud, "Trusted_Hosts",'172.198.100.1')
+
+    infra.create_large_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], gatekeeper_user_data, "Gatekeeper",'172.198.100.6')
+
+
+
+# See PyCharm help at https://www.jetbrains.com/help/pycharm/

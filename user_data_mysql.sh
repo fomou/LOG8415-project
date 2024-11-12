@@ -12,7 +12,7 @@ tar -xvf /home/ubuntu/sakila-db.tar.gz -C /home/ubuntu/
 sudo service mysql start
 
 echo -e "\nn\nn\nn\nY\nn\n" | sudo mysql_secure_installation
-
+sudo mysql -u root -e "USE mysql; UPDATE user SET plugin='mysql_native_password' WHERE User='root';FLUSH PRIVILEGES;"
 sudo mysql -u root -e "SOURCE /home/ubuntu/sakila-db/sakila-schema.sql;"
 sudo mysql -u root -e "SOURCE /home/ubuntu/sakila-db/sakila-data.sql;"
 sudo mysql -u root -e "USE sakila; CREATE USER 'root'@'localhost' IDENTIFIED BY 'root'; GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'root'; FLUSH PRIVILEGES;" > /home/ubuntu/db_setup.log 2>&1,

@@ -12,6 +12,7 @@ tar -xvf /home/ubuntu/sakila-db.tar.gz -C /home/ubuntu/
 sudo service mysql start
 
 echo -e "\nn\nn\nn\nY\nn\n" | sudo mysql_secure_installation
+sudo mysql -u root -e "USE mysql; UPDATE user SET plugin='mysql_native_password' WHERE User='root';FLUSH PRIVILEGES;"
 
 sudo mysql -u root -e "SOURCE /home/ubuntu/sakila-db/sakila-schema.sql;"
 sudo mysql -u root -e "SOURCE /home/ubuntu/sakila-db/sakila-data.sql;"
@@ -35,4 +36,5 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
+sleep 2m
 python3 manager.py

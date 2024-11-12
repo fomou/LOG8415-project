@@ -4,30 +4,7 @@ import boto3
 import requests
 import random
 app = Flask("__main__")
-def names_private_ip():
-    client = boto3.client('ec2', region_name='us-east-1')
-    filters = [
-        {
-            'Name': 'tag:Name',  # Filtering by the 'Environment' tag
-            'Values': ['Manager',"worker1", "worker2"]
-        }
-    ]
-    response = client.describe_instances(Filters = filters)
-    print("")
-    # Describe instances that match the filters
 
-    names_ip ={}
-    # Access the instance details
-    if not response['Reservations']:
-        print('No instances with the specified tag were found.')
-    else:
-        for reservation in response['Reservations']:
-            for instance in reservation['Instances']:
-                if instance['State']['Name'] == 'running':
-                    name = instance['Tags'][0]['Value']
-                    names_ip[name] = instance['PrivateIpAddress']
-
-    return names_ip
 @app.route("/ping")
 def ping():
     return jsonify({"status": "healthy"}),200
@@ -82,5 +59,5 @@ def process_request(route,req_type):
             return jsonify({"Type": req_type, "Processed by": best_name, "value": response.json()})
 
 if __name__ == "__main__":
-    name_ip = names_private_ip()
+    name_ip = {'Manager': '172.198.100.3','work1':"172.198.100.4", "worker2":'172.198.100.5'}
     app.run(host='0.0.0.0', port=5000)
