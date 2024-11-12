@@ -6,6 +6,29 @@ import random
 
 app = Flask(__name__)
 
+def names_private_ip():
+    client = boto3.client('ec2', region_name='us-east-1')
+    filters = [
+        {
+            'Name': 'tag:Name',  # Filtering by the 'Environment' tag
+            'Values': ["worker1", "worker2"]
+        }
+    ]
+    response = client.describe_instances(Filters = filters)
+    # Describe instances that match the filters
+    names_ip ={}
+    # Access the instance details
+    if not response['Reservations']:
+        print('No instances with the specified tag were found.')
+    else:
+        for reservation in response['Reservations']:
+            for instance in reservation['Instances']:
+                if instance['State']['Name'] == 'running':
+                    name = instance['Tags'][0]['Value']
+                    names_ip[name] = instance['PrivateIpAddress']
+
+    return names_ip
+
 def get_connector():
 
     connection = connect(
@@ -34,16 +57,17 @@ def read_data():
 def write():
     connection = get_connector()
     cursor = connection.cursor(dictionary=True)
-    name = f'name_{random.randint(0, 1000)}'
+    name_ = f'name_{random.randint(0, 1000)}'
     cursor.execute("CREATE TABLE IF NOT EXISTS test (id INT AUTO_INCREMENT,name VARCHAR(255),PRIMARY KEY (id));")
-    cursor.execute(f"INSERT INTO test (name) VALUES ('{name}');")
+    cursor.execute(f"INSERT INTO test (name) VALUES ('{name_}');")
 
     row = cursor.fetchall()
     cursor.close()
     connection.commit()
     connection.close()
-    for ip in ["172.31.16.4","172.31.16.5"]:
-        response = requests.get(f'http://{ip}:5000/write?name={name}')
+    for name in ["worker1","worker2"]:
+        ip = name_ip[name]
+        response = requests.get(f"http://{ip}:5000/write?name='{name_}'")
         print(response)
     return jsonify({'write':"finish"}), 200
 
@@ -58,5 +82,5 @@ def get_table_size():
     return jsonify(row[0]), 200
 
 if __name__ == "__main__":
-    name_ip = {'work1':"172.31.16.4", "worker2":'172.31.16.5'}
+    name_ip = names_private_ip()
     app.run(host='0.0.0.0', port=5000) # Adjust port if needed
