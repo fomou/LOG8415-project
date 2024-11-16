@@ -24,15 +24,20 @@ def read():
     req_type = request.args.get("req_type")
     private = trusted_host_ip()
     response = requests.get(f'http://{private}:5050/read?req_type={req_type}')
-    return jsonify(response.json()), response.status_code
+    return response.json(), response.status_code
 
 @app.route("/write")
 def write():
     req_type = request.args.get("req_type")
     private = trusted_host_ip()
     response = requests.get(f'http://{private}:5050/write')
-    return jsonify(response.json()), response.status_code
-
+    return response.json(), response.status_code
+@app.route("/table_size")
+def get_table_size():
+    ip = trusted_host_ip()
+    response = requests.get(f'http://{ip}:5050/table_size')
+    data = response.json()
+    return data
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
