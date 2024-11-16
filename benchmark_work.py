@@ -41,7 +41,7 @@ async def call_endpoint_http (load_balancer_url, session , request_num, data ) :
         return None , str(e)
 
 async def main() :
-    num_requests = 10
+    num_requests = 1000
     start_time = time.time()
 
     elb_client = boto3.client('elbv2')
@@ -56,10 +56,10 @@ async def main() :
         print('\n************* sending writing request *************\n')
         start_time = time.time()
         data = {}
-        async with aiohttp.ClientSession() as session:
-            write_url = f'http://{gatekeeper_ip}:5000/write'
-            tasks = [call_endpoint_http(write_url, session, i, data) for i in range(num_requests)]
-            await asyncio.gather(*tasks)
+        # async with aiohttp.ClientSession() as session:
+        #     write_url = f'http://{gatekeeper_ip}:5000/write'
+        #     tasks = [call_endpoint_http(write_url, session, i, data) for i in range(num_requests)]
+        #     await asyncio.gather(*tasks)
 
         end_time = time.time()
         print(f"\nTotal time taken : {end_time - start_time :.2f} seconds ")

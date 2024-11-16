@@ -54,7 +54,7 @@ def get_table_size():
     return jsonify(data)
 
 def process_request(route,req_type):
-    if req_type == "Direct" or not req_type:
+    if req_type == "direct" or not req_type:
         ip = name_ip["Manager"]
         response = requests.get(f'http://{ip}:5000/{route}')
 
