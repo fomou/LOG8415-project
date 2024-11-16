@@ -67,7 +67,7 @@ def write():
     connection.close()
     for name in ["worker1","worker2"]:
         ip = name_ip[name]
-        response = requests.get(f"http://{ip}:5000/write?name='{name_}'")
+        response = requests.get(f"http://{ip}:5000/write?name={name_}")
         print(response)
     return jsonify({'write':"finish"}), 200
 
