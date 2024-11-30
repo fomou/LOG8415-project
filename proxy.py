@@ -36,7 +36,7 @@ def ping():
 def read():
         req_type = request.args.get("req_type")
         outcome =process_request("read",req_type)
-        return jsonify(outcome)
+        return outcome
 
 @app.route("/write")
 def write():
@@ -61,7 +61,7 @@ def process_request(route,req_type):
         if response.status_code == 200:
             return jsonify({"Type": req_type, "Processed by": "Manager", "value": response.json()})
     elif req_type == "random":
-        name = random.choice(["Manager", "worker1", "worker2"])
+        name = random.choice(["worker1", "worker2"])
         ip = name_ip[name]
         response = requests.get(f'http://{ip}:5000/{route}')
         if response.status_code == 200:

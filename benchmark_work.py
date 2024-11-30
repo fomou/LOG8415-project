@@ -67,7 +67,7 @@ async def main() :
         print(f"*************tables size after write operations***********")
         async with aiohttp.ClientSession() as session:
             await print_tables_size(f'http://{gatekeeper_ip}:5000/table_size', session)
-        implementations = ["random","direct","customize"]
+        implementations = ["random"]#,"direct","customize"]
         for imp in implementations:
             print(f"******************* sending {num_requests} read requests for implementation {imp}***************")
             read_url = f'http://{gatekeeper_ip}:5000/read?req_type={imp}'

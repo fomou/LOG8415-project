@@ -33,7 +33,7 @@ def get_table_size():
 
 @app.route("/read")
 def read():
-    response,_ = process_req("read")
+    response = process_req("read")
     return response
 @app.route("/write")
 def write():
@@ -43,15 +43,15 @@ def process_req(route):
     # Reject request from others hosts other than the gatekeeper
     incoming_ip = request.remote_addr
     if incoming_ip != ip_table["Gatekeeper"]:
-         return {"status":f"Unauthorized IP {incoming_ip}", "code":401}
+         return jsonify({"status":f"Unauthorized IP {incoming_ip}", "code":401})
     # Assess the implementation type
     req_type = request.args.get("req_type")
     if req_type and req_type not in ["random","direct",'customize']:
-        return {"status":f"Unauthorized implementation type {req_type}", "code":402}
+        return jsonify({"status":f"Unauthorized implementation type {req_type}", "code":402})
     # Forward the request to the proxy on its private IP as it's reachable over internet
     private = ip_table["Proxy"]
     response = requests.get(f'http://{private}:5000/{route}?req_type={req_type}')
-    return jsonify(response.json())
+    return response.json()
 
 
 if __name__ == "__main__":
