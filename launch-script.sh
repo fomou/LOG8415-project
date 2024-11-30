@@ -1,22 +1,19 @@
 #!/bin/bash
 
+sudo rm Project-key-pair.pem 2 > /dev/null
+cp ~/.aws/credentials credentials
+export VENV=.venv
+
+if [ ! -d "$VENV" ]; then
+  virtualenv .venv -p python3
+fi
+
 source .venv/bin/activate
 
-echo "creating key-pair"
-sleep 10
+pip install -r requirements.txt
+source .venv/bin/activate
 
-echo "Creating security groups"
-sleep 5
-
-echo " security internal created"
-sleep 5
-echo " security externat created"
-sleep 5
-
-echo "Creating t2-micros instances for workers and manager"
-sleep 30
-
-echo "Creating t2-larges instance for gatekeeper, trusted host and proxy"
+python3 main.py
 sleep 30
 
 echo "**************** Bench Marking ******************"

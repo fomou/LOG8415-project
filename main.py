@@ -1,4 +1,4 @@
-
+from time import sleep
 
 import boto3
 from botocore.exceptions import ClientError, NoCredentialsError
@@ -115,6 +115,7 @@ if __name__ == '__main__':
     names = ['worker1','worker2']
     for name in names :
         infra.create_micro_instances(ec2_res, [infra.sec_group_id_2],user_data, name)
+        sleep(15)
 
     credentials = open('credentials','r').read()
     key_pair = open('Project-key-pair.pem','r').read()
@@ -130,12 +131,14 @@ if __name__ == '__main__':
     manager_user_data+=open("manager_user_data.sh").read()
 
     infra.create_micro_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], manager_user_data, "Manager")
+    sleep(15)
+
     infra.create_large_instances(ec2_res,[infra.sec_group_id_1,infra.sec_group_id_2], proxy_user_data,"Proxy")
-
+    sleep(15)
     infra.create_large_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], trusted_host_ud, "Trusted_Hosts")
-
+    sleep(30)
     infra.create_large_instances(ec2_res, [infra.sec_group_id_1,infra.sec_group_id_2], gatekeeper_user_data, "Gatekeeper")
 
 
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
